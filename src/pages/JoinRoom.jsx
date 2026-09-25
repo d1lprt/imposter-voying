@@ -24,18 +24,24 @@ export default function JoinRoom() {
   const [name, setName] = useState('')
   const [submitting, setSubmitting] = useState(false)
   const [error, setError] = useState(null)
+  const [rawError, setRawError] = useState(null)
 
   async function handleSubmit(e) {
     e.preventDefault()
     if (!code.trim() || !name.trim() || !authId) return
     setSubmitting(true)
     setError(null)
+    setRawError(null)
+
+    console.log('[infiltrator] attempting join:', { code: code.trim().toUpperCase(), name: name.trim(), authId })
 
     const { error: rpcError } = await supabase
       .rpc('join_room', { p_room_code: code.trim().toUpperCase(), p_name: name.trim() })
       .single()
 
     if (rpcError) {
+      console.error('[infiltrator] join_room failed:', rpcError)
+      setRawError(rpcError)
       setError(readableError(rpcError))
       setSubmitting(false)
       return
@@ -91,6 +97,16 @@ export default function JoinRoom() {
 
           {error && <p className="text-sm font-semibold text-coral-deep">{error}</p>}
 
+          {rawError && (
+            <div className="max-w-sm break-words rounded-lg bg-black/5 p-3 text-left font-mono text-xs text-ink/70">
+              <p className="font-semibold text-ink/80">Debug info (check console too):</p>
+              <p className="mt-1">
+                {rawError.code ? `[${rawError.code}] ` : ''}
+                {rawError.message}
+              </p>
+            </div>
+          )}
+
           <button
             type="submit"
             disabled={submitting || authLoading || !code.trim() || !name.trim()}
@@ -98,6 +114,10 @@ export default function JoinRoom() {
           >
             {submitting ? 'Joining…' : 'Join Room'}
           </button>
+
+          {authLoading && (
+            <p className="text-xs text-ink/50">Initializing your session…</p>
+          )}
         </form>
       </div>
     </div>
