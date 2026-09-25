@@ -1,0 +1,67 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+html, body, #root {
+  height: 100%;
+}
+
+body {
+  @apply bg-cream text-ink font-body antialiased;
+}
+
+::selection {
+  background: rgba(124, 92, 255, 0.35);
+}
+
+*:focus-visible {
+  outline: 3px solid #15131C;
+  outline-offset: 2px;
+}
+
+@layer components {
+  .card {
+    @apply bg-paper border-[3px] border-ink rounded-3xl shadow-hard;
+  }
+
+  .card-sm {
+    @apply bg-paper border-[2.5px] border-ink rounded-2xl shadow-hardSm;
+  }
+
+  .field {
+    @apply w-full bg-paper border-[3px] border-ink rounded-2xl px-4 py-3 text-ink placeholder-ink/40
+      font-medium outline-none transition-colors focus:bg-white;
+  }
+
+  .btn-base {
+    @apply inline-flex items-center justify-center gap-2 rounded-full border-[3px] border-ink px-6 py-3
+      font-display font-bold shadow-hard transition-transform duration-150
+      active:translate-x-[4px] active:translate-y-[4px] active:shadow-none
+      disabled:cursor-not-allowed disabled:opacity-40;
+  }
+
+  .btn-primary {
+    @apply btn-base bg-ink text-paper;
+  }
+
+  .btn-accent {
+    @apply btn-base bg-coral text-ink;
+  }
+
+  .btn-ghost {
+    @apply btn-base bg-paper text-ink;
+  }
+
+  .chip {
+    @apply inline-flex items-center gap-1.5 rounded-full border-[2.5px] border-ink bg-paper px-3 py-1
+      text-sm font-semibold text-ink;
+  }
+}
