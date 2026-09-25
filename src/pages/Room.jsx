@@ -13,7 +13,7 @@ export default function Room() {
   const { code } = useParams()
   const navigate = useNavigate()
   const { authId, loading: authLoading } = useAuthSession()
-  const { room, loading: roomLoading, notFound } = useRoom(code)
+  const { room, loading: roomLoading, notFound, lastError } = useRoom(code)
   const { players, loading: playersLoading } = usePlayers(room?.id)
 
   const me = useMemo(
@@ -36,6 +36,12 @@ export default function Room() {
   if (notFound) {
     return (
       <CenteredMessage title="Room not found" subtitle="That code doesn't match an active room.">
+        {lastError && (
+          <p className="mt-4 max-w-sm break-words rounded-lg bg-black/5 p-3 text-left font-mono text-xs text-ink/70">
+            {lastError.code ? `[${lastError.code}] ` : ''}
+            {lastError.message}
+          </p>
+        )}
         <Link to="/join" className="btn-primary mt-6">
           Try another code
         </Link>
